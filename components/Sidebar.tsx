@@ -85,7 +85,7 @@ const Sidebar = () => {
       <div className="flex py-4 flex-col space-y-4 md:max-w-36">
         {groupedData.owner.length === 0 ? (
           <h2 className="text-gray-500 font-semibold text-sm">
-            No documents found
+            No owned documents found
           </h2>
         ) : (
           <>

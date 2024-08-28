@@ -3,6 +3,7 @@
 import { adminDb } from "@/firebase-admin";
 import liveblocks from "@/lib/liveblocks";
 import { auth } from "@clerk/nextjs/server";
+import { toast } from "sonner";
 
 export async function createNewDocument() {
   auth().protect();
@@ -54,7 +55,6 @@ export async function deleteDocument(roomId: string) {
 
     // delete the room in liveblocks
     await liveblocks.deleteRoom(roomId);
-
     return { success: true };
   } catch (error) {
     console.error(error);

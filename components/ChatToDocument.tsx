@@ -22,30 +22,24 @@ const ChatToDocument = (doc: { doc: Y.Doc }) => {
   const [question, setQuestion] = useState("");
   const [summary, setSummary] = useState("");
 
+  const { GoogleGenerativeAI } = require("@google/generative-ai");
+
+  const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY);
+
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
   const handleAskQuestion = async (e: FormEvent) => {
     e.preventDefault();
-
     setQuestion(input);
 
     startTransition(async () => {
       const documentData = doc.doc.get("document-store").toJSON();
+      const prompt = `You are a assistant helping the user to chat to a document, I am providing a JSON file of the markdown for the document. Using this, answer the users question in the clearest way possible, the document is about 
+					${documentData}, My Question is  ${await question} `;
 
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/chatToDocument`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            documentData,
-            question: input,
-          }),
-        }
-      );
-
-      if (res.ok) {
-        const { message } = await res.json();
+      const result = await model.generateContent([prompt]);
+      if (result) {
+        const message = result.response.text();
         setInput("");
         setSummary(message);
         toast.success("Successfully chat to the document");
@@ -85,7 +79,7 @@ const ChatToDocument = (doc: { doc: Y.Doc }) => {
             <div className="flex">
               <BotIcon className="w-10 flex-shrink-0" />
               <p className="font-bold">
-                GPT {isPending ? "is thinking..." : "Says:"}
+                Gemini {isPending ? "is thinking..." : "Says:"}
               </p>
             </div>
             <p>{isPending ? "Thinking..." : <Markdown>{summary}</Markdown>}</p>

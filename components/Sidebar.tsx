@@ -22,6 +22,9 @@ import {
 import { db } from "@/firebase";
 import { useEffect, useState } from "react";
 import SidebarOption from "./SidebarOption";
+import { Button } from "./ui/button";
+
+//export feature
 
 interface RoomDocument extends DocumentData {
   createdAt: string;
@@ -78,9 +81,41 @@ const Sidebar = () => {
     setGroupedData(grouped);
   }, [data]);
 
+  const exportToPDF = async () => {
+    const editorContent = document.getElementById("editor-content")?.innerHTML;
+
+    if (!editorContent) return;
+
+    const response = await fetch("/api/export-to-pdf", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ htmlContent: editorContent }),
+    });
+
+    if (response.ok) {
+      const pdfBlob = await response.blob();
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+
+      // Download the PDF
+      const link = document.createElement("a");
+      link.href = pdfUrl;
+      link.download = "document.pdf";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      console.error("Failed to generate PDF");
+    }
+  };
+
   const menuOptions = (
     <>
-      <NewDocumentButton />
+      <div className="flex flex-col gap-2">
+        <Button onClick={exportToPDF}>Export Document</Button>
+        <NewDocumentButton />
+      </div>
       {/* My Document */}
       <div className="flex py-4 flex-col space-y-4 md:max-w-36">
         {groupedData.owner.length === 0 ? (

@@ -12,6 +12,8 @@ import { useCreateBlockNote } from "@blocknote/react";
 import "@blocknote/core/fonts/inter.css";
 import "@blocknote/shadcn/style.css";
 import stringToColor from "@/lib/stringToColor";
+import TranslateDocument from "./TranslateDocument";
+import ChatToDocument from "./ChatToDocument";
 
 type EditorProps = {
   doc: Y.Doc;
@@ -34,7 +36,10 @@ const BlockNote = ({ doc, provider, darkMode }: EditorProps) => {
   });
 
   return (
-    <div className="relative max-w-6xl mx-auto">
+    <div
+      className="relative max-w-6xl mx-auto"
+      id="editor-content"
+    >
       <BlockNoteView
         editor={editor}
         theme={darkMode ? "dark" : "light"}
@@ -76,8 +81,10 @@ const Editor = () => {
     <div className="max-w-6xl mx-auto">
       <div className="flex items-center gap-2 justify-end mb-10">
         {/* Translate Document AI */}
-        {/* Chat to Document */}
+        <TranslateDocument doc={doc} />
 
+        {/* Chat to Document */}
+        <ChatToDocument doc={doc} />
         {/* Darkmode */}
         <Button
           className={style}

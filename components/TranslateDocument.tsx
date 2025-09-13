@@ -62,19 +62,16 @@ const TranslateDocument = ({ doc }: { doc: Y.Doc }) => {
     startTransition(async () => {
       const documentData = doc.get("document-store").toJSON();
 
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/translateDocument`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            documentData,
-            targetLang: language,
-          }),
-        }
-      );
+      const res = await fetch(`/translateDocument`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          documentData,
+          targetLang: language,
+        }),
+      });
 
       if (res.ok) {
         const { translated_text } = await res.json();
@@ -87,14 +84,8 @@ const TranslateDocument = ({ doc }: { doc: Y.Doc }) => {
   };
 
   return (
-    <Dialog
-      open={isOpen}
-      onOpenChange={setIsOpen}
-    >
-      <Button
-        asChild
-        variant="outline"
-      >
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <Button asChild variant="outline">
         <DialogTrigger>
           <LanguagesIcon />
           Translate
@@ -120,10 +111,7 @@ const TranslateDocument = ({ doc }: { doc: Y.Doc }) => {
             <p>{isPending ? "Thinking..." : <Markdown>{summary}</Markdown>}</p>
           </div>
         )}
-        <form
-          className="flex gap-2"
-          onSubmit={handleAskQuestion}
-        >
+        <form className="flex gap-2" onSubmit={handleAskQuestion}>
           <Select
             value={language}
             onValueChange={(value) => setLanguage(value)}
@@ -133,19 +121,13 @@ const TranslateDocument = ({ doc }: { doc: Y.Doc }) => {
             </SelectTrigger>
             <SelectContent>
               {languages.map((language) => (
-                <SelectItem
-                  key={language}
-                  value={language}
-                >
+                <SelectItem key={language} value={language}>
                   {language.charAt(0).toUpperCase() + language.slice(1)}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
-          <Button
-            type="submit"
-            disabled={!language || isPending}
-          >
+          <Button type="submit" disabled={!language || isPending}>
             {isPending ? "Translating..." : "Translate"}
           </Button>
         </form>

@@ -113,7 +113,7 @@ const Sidebar = () => {
   const menuOptions = (
     <>
       <div className="flex flex-col gap-2">
-        <Button onClick={exportToPDF}>Export Document</Button>
+        {/* <Button onClick={exportToPDF}>Export Document</Button> */}
         <NewDocumentButton />
       </div>
       {/* My Document */}
@@ -128,11 +128,7 @@ const Sidebar = () => {
               My Documents
             </h2>
             {groupedData.owner.map((doc) => (
-              <SidebarOption
-                key={doc.id}
-                id={doc.id}
-                href={`/doc/${doc.id}`}
-              />
+              <SidebarOption key={doc.id} id={doc.id} href={`/doc/${doc.id}`} />
             ))}
           </>
         )}
@@ -144,11 +140,7 @@ const Sidebar = () => {
               Shared with Me
             </h2>
             {groupedData.editor.map((doc) => (
-              <SidebarOption
-                key={doc.id}
-                id={doc.id}
-                href={`/doc/${doc.id}`}
-              />
+              <SidebarOption key={doc.id} id={doc.id} href={`/doc/${doc.id}`} />
             ))}
           </>
         )}
@@ -163,10 +155,7 @@ const Sidebar = () => {
       <div className="md:hidden">
         <Sheet>
           <SheetTrigger>
-            <MenuIcon
-              className="p-2 hover:opacity-30 rounded-lg"
-              size={40}
-            />
+            <MenuIcon className="p-2 hover:opacity-30 rounded-lg" size={40} />
           </SheetTrigger>
           <SheetContent side="left">
             <SheetHeader>
